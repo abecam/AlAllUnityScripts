@@ -1,7 +1,6 @@
 using UnityEngine;
 using Mirror;
 using TMPro;
-using UnityEngine.UI;
 
 namespace TGB.SniperVsRunner
 {

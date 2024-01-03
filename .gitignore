@@ -70,3 +70,6 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+SniperVsRunner/Scripts/ActivateWhenOthersPressed.cs.meta
+SniperVsRunner/Scripts/ButtonPressAction.cs.meta
+SniperVsRunner/Scripts/GotPressed.cs.meta
