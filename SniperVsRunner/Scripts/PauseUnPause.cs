@@ -21,7 +21,7 @@ namespace TGB.SniperVsRunner
         {
             if (coolDown == 0 && isLocalPlayer)
             {
-                if (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
+                if (Input.GetKeyDown(KeyCode.P))  // (Input.GetKeyDown(KeyCode.Escape) || Input.GetKeyDown(KeyCode.P))
                 {   
                     controlScript.enabled = !controlScript.enabled;
                     Cursor.lockState = (controlScript.enabled)?CursorLockMode.Locked : CursorLockMode.None;

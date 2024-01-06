@@ -8,6 +8,8 @@ namespace TGB.SniperVsRunner
     {
         private ILogger myLogger = Debug.unityLogger;
 
+        internal bool isTurret = false;
+
         [Header("Components")]
         public TextMeshPro healthBar;
         // TODO: Particles or FX for shoot
@@ -17,6 +19,7 @@ namespace TGB.SniperVsRunner
         [Header("Firing")]
         public KeyCode shootKey = KeyCode.Space;
         public GameObject projectilePrefab;
+        public GameObject projectileTurretPrefab;
         public Transform projectileMount;
 
         [Header("Stats")]
@@ -24,6 +27,7 @@ namespace TGB.SniperVsRunner
         [SyncVar] public int lostCount = 0;
 
         PlayerScore playerScore;
+        private GameObject[] players;
 
         private void Start()
         {
@@ -31,6 +35,18 @@ namespace TGB.SniperVsRunner
             if (!isLocalPlayer)
             {
                 theCamera.enabled = false;
+            }
+            // At the beginning, the script is never for turret!
+            {
+                players = GameObject.FindGameObjectsWithTag("Player");
+                if (players == null)
+                {
+                    myLogger.Log("No player yet, null returned");
+                }
+                else if (players.Length == 0)
+                {
+                    myLogger.Log("No player yet, length 0 returned");
+                }
             }
             playerScore = GetComponent<PlayerScore>();
         }
@@ -67,10 +83,21 @@ namespace TGB.SniperVsRunner
         [Command]
         void CmdFire()
         {
-            GameObject projectile = Instantiate(projectilePrefab, projectileMount.position, projectileMount.rotation);
-            projectile.GetComponent<NetworkProjectile>().parent = this;
-            NetworkServer.Spawn(projectile);
-            RpcOnFire();
+            if (isTurret)
+            {
+                GameObject projectile = Instantiate(projectileTurretPrefab, projectileMount.position, projectileMount.rotation);
+                projectile.GetComponent<NetworkProjectile>().parent = this;
+                projectile.GetComponent<NetworkProjectile>().players = players;
+                NetworkServer.Spawn(projectile);
+                RpcOnFire();
+            }
+            else
+            {
+                GameObject projectile = Instantiate(projectilePrefab, projectileMount.position, projectileMount.rotation);
+                projectile.GetComponent<NetworkProjectile>().parent = this;  
+                NetworkServer.Spawn(projectile);
+                RpcOnFire();
+            }
         }
 
         // this is called on the tank that fired for all observers
